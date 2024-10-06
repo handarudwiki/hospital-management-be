@@ -1,0 +1,433 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                        Int      @id @default(autoincrement())
+  first_name                String
+  last_name                 String
+  national_id               String?
+  email                     String   @unique
+  password                  String?
+  address                   String?
+  picture                   String?
+  birth_date                String
+  gender                    Gender?
+  phone                     String?
+  mobile                    String?
+  emergency                 String?
+  type                      String?
+  email_verified_at         String?
+  medical_degree            String?
+  specialist                String?
+  biography                 String?
+  educational_qualification String?
+  blood_group               String?
+  created_at                DateTime @default(now())
+  updated_at                DateTime @updatedAt
+
+
+  PaymentItems PaymentItem[] 
+  DayoffSchedule DayoffSchedule[]
+  PatientService PatientService[]
+  patientLabReports LapReport[] @relation("PatientLabReports")
+  doctorLabReports LapReport[] @relation("DoctorLabReports")
+  PatientPayments Payment[] @relation("PatientPayments")
+  DoctorPayments Payment[] @relation("DoctorPayments")
+  patientAppointments Appointment[]  @relation("PatientAppointments")
+  doctorAppointments  Appointment[]  @relation("DoctorAppointments")
+  patientDocuments    Document[]     @relation("PatientDocuments")
+  doctorDocuments     Document[]     @relation("DoctorDocuments")
+  doctorPrescriptions Prescription[] @relation("DoctorPrescriptions")
+  patientPrescriptions Prescription[] @relation("PatientPrescriptions")
+  caseHistories       CaseHistory[]
+  time_schedules      TimeSchedule[]
+  departmentUsers     DepartmentUser[]
+
+  @@map("users")
+}
+
+model Department {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  appointments Appointment[]
+  services     Service[]
+  beds         bed[]
+  departmentUsers DepartmentUser[]
+
+  @@map("departments")
+}
+
+model TimeSchedule {
+  id         Int      @id @default(autoincrement())
+  week_day   String
+  week_num   Int?
+  start_time String
+  end_time   String
+  duration   String?
+  user_id    Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("time_schedules")
+}
+
+model Appointment {
+  id            Int      @id @default(autoincrement())
+  patient_id    Int
+  doctor_id     Int
+  department_id Int
+  date          DateTime
+  time          String
+  status        String
+  notes         String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  patient    User       @relation("PatientAppointments", fields: [patient_id], references: [id])
+  doctor     User       @relation("DoctorAppointments", fields: [doctor_id], references: [id])
+  department Department @relation(fields: [department_id], references: [id])
+
+  @@map("appointments")
+}
+
+model CaseHistory {
+  id                     Int      @id @default(autoincrement())
+  patient_id             Int
+  date                   DateTime
+  title                  String
+  food_allergies         String?
+  bleed_tendency         String?
+  heart_disease          String?
+  blood_preasure         String?
+  diabetic               String?
+  surgery                String?
+  accident               String?
+  family_medical_history String?
+  current_medication     String?
+  female_pregnancy       String?
+  breast_feeding         String?
+  health_insurance       String?
+  low_income             String?
+  reference              String?
+  others                 String?
+  status                 String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  patient User @relation(fields: [patient_id], references: [id])
+
+  @@map("case_histories")
+}
+
+model Document {
+  id          Int      @id @default(autoincrement())
+  patient_id  Int
+  doctor_id   Int
+  date        DateTime
+  description String?
+  doc         String?
+  status      String?
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  patient User @relation("PatientDocuments", fields: [patient_id], references: [id])
+  doctor  User @relation("DoctorDocuments", fields: [doctor_id], references: [id])
+
+  @@map("documents")
+}
+
+model Prescription {
+  id             Int      @id @default(autoincrement())
+  doctor_id      Int
+  patient_id     Int
+  blood_pressure String?
+  diabetes       String?
+  symptoms       String
+  diagnosis      String
+  advice         String?
+  date           DateTime
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  doctor  User @relation("DoctorPrescriptions",fields: [doctor_id], references: [id])
+  patient User @relation("PatientPrescriptions",fields: [patient_id], references: [id])
+  medicinePrescriptions MedicinePrescription[]
+
+  @@map("prescriptions")
+}
+
+model MedicineCatgory{
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  medicines Medicine[]
+
+  @@map("medicine_catgories")
+}
+
+model Medicine{
+  id          Int      @id @default(autoincrement())
+  name        String
+  instruction String?
+  category_id Int
+  purchase_price Float
+  sale_price Float
+  quantity    Int
+  company     String
+  expire_date DateTime
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  category MedicineCatgory @relation(fields: [category_id], references: [id])
+  medicinePrescriptions MedicinePrescription[]
+
+  @@map("medicines")
+}
+
+
+model PatientService{
+  id          Int      @id @default(autoincrement())
+  patient_id  Int
+  service_id  Int
+  date        DateTime
+  status      String
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  patient User @relation(fields: [patient_id], references: [id])
+  service Service @relation(fields: [service_id], references: [id])
+
+  @@map("patient_services")
+}
+
+
+model DayoffSchedule{
+  id          Int      @id @default(autoincrement())
+  user_id     Int
+  date        DateTime
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("dayoff_schedules")
+}
+
+model Service{
+  id          Int      @id @default(autoincrement())
+  department_id Int
+  name        String
+  charge Float
+  doctor_commission Float
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  department Department @relation(fields: [department_id], references: [id])
+  patientServices PatientService[]
+
+
+  serviceServicePackages ServiceServicePackage[]
+
+
+  @@map("services")
+}
+
+model ServicePackage{
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String
+  charge       String
+  doctor_commission String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  serviceServicePackages ServiceServicePackage[]
+
+  @@map("service_packages")
+}
+
+model ServiceServicePackage{
+
+  id          Int      @id @default(autoincrement())
+  service_id  Int
+  service_package_id  Int
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  service Service @relation(fields: [service_id], references: [id])
+  servicePackage ServicePackage @relation(fields: [service_package_id], references: [id])
+
+  @@map("service_service_packages")
+}
+
+model MedicinePrescription{
+  id          Int      @id @default(autoincrement())
+  prescription_id Int 
+  medicine_id Int
+  instructions String
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  prescription Prescription @relation(fields: [prescription_id], references: [id])
+  medicine Medicine @relation(fields: [medicine_id], references: [id])
+  @@map("medicine_prescriptions")
+}
+
+model bed{
+  id Int @id @default(autoincrement())
+  department_id Int
+  code String
+  status String
+  notes String
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  department Department @relation(fields: [department_id], references: [id])
+
+  @@map("beds")
+}
+
+model LapTemplate {
+  id Int @id @default(autoincrement())
+  name String
+  template String
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  LapReport LapReport[]
+
+  @@map("lap_templates")
+}
+
+model LapReport{
+  id Int @id @default(autoincrement())
+  patient_id Int
+  doctor_id Int
+  date DateTime
+  time String
+  report String
+  template_id Int
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  patient User @relation("PatientLabReports",fields: [patient_id], references: [id])
+  doctor User @relation("DoctorLabReports",fields: [doctor_id], references: [id])
+  template LapTemplate @relation(fields: [template_id], references: [id])
+
+  @@map("lap_reports")
+}
+
+model Payment{
+  id Int @id @default(autoincrement())
+  patient_id Int?
+  doctor_id Int?
+  sub_total Float
+  taxes Float
+  total Float
+  amount_received Float
+  amount_to_pay Float
+  doctor_commission Float
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  patient User? @relation("PatientPayments",fields: [patient_id], references: [id])
+  doctor User? @relation("DoctorPayments",fields: [doctor_id], references: [id])
+
+  paymentPaymentItem PaymentPaymentItem[]
+
+  @@map("payments")
+}
+
+model PaymentItem{
+  id Int @id @default(autoincrement())
+  doctor_id Int? 
+  code String
+  name String
+  type String
+  price Float
+  commission String
+  quantity Int
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  doctor User? @relation(fields: [doctor_id], references: [id])
+  paymentPaymentItem PaymentPaymentItem[]
+
+  @@map("payment_items")
+}
+
+model PaymentPaymentItem{
+  id Int @id @default(autoincrement())
+  payment_id Int
+  payment_item_id Int
+  payment_item_quantity Int
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  payment Payment @relation(fields: [payment_id], references: [id])
+  paymentItem PaymentItem @relation(fields: [payment_item_id], references: [id])
+  @@map("payment_payment_items")
+}
+
+model Expense{
+  id Int @id @default(autoincrement())
+  name String
+  amount Float
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  @@map("expenses")
+}
+
+model DepartmentUser{
+  id Int @id @default(autoincrement())
+  department_id Int
+  user_id Int
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  department Department @relation(fields: [department_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("department_users")
+}
+
+enum Gender {
+  male
+  female
+}
