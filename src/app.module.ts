@@ -5,6 +5,7 @@ import { AppService } from './app.service';
 import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
+import { DepartmentModule } from './department/department.module';
 
 @Module({
   imports: [
@@ -16,6 +17,8 @@ import { ConfigModule } from '@nestjs/config';
       isGlobal: true,
       envFilePath: '.env',
     }),
+
+    DepartmentModule,
   ],
   controllers: [AppController],
   providers: [AppService],

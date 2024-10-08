@@ -33,7 +33,7 @@ export function toUserResponse(data: User): UserResponse {
     mobile: data.mobile,
     gender: data.gender,
     emergency: data.emergency,
-    type: data.type,
+    type: data.role,
     medical_degree: data.medical_degree,
     specialist: data.specialist,
     biography: data.biography,

@@ -9,6 +9,6 @@ export class UserController {
   @Get('me')
   @UseGuards(JwtGuard)
   async me(@GetUser() user: any) {
-    return toResponse(toUserResponse(user));
+    return toResponse('get current user successfully', toUserResponse(user));
   }
 }

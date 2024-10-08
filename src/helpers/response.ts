@@ -1,5 +1,6 @@
-export default function toResponse(data: any) {
+export default function toResponse(message: string, data?: any) {
   return {
-    data,
+    message,
+    data: data,
   };
 }

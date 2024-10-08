@@ -27,7 +27,7 @@ model User {
   phone                     String?
   mobile                    String?
   emergency                 String?
-  type                      String?
+  role                      Role?   @default(patient)
   email_verified_at         String?
   medical_degree            String?
   specialist                String?
@@ -430,4 +430,12 @@ model DepartmentUser{
 enum Gender {
   male
   female
+}
+
+enum Role {
+  admin
+  doctor
+  patient
+  nurse
+  receptionist
 }
