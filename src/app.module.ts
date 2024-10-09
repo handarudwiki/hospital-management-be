@@ -6,9 +6,16 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { ConfigModule } from '@nestjs/config';
 import { DepartmentModule } from './department/department.module';
+import { DoctorModule } from './doctor/doctor.module';
+import { ServeStaticModule } from '@nestjs/serve-static';
+import { join } from 'path';
 
 @Module({
   imports: [
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '../public'),
+      serveRoot: '/storage',
+    }),
     UserModule,
     AuthModule,
     PrismaModule,
@@ -19,6 +26,8 @@ import { DepartmentModule } from './department/department.module';
     }),
 
     DepartmentModule,
+
+    DoctorModule,
   ],
   controllers: [AppController],
   providers: [AppService],
