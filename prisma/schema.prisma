@@ -54,6 +54,7 @@ model User {
   caseHistories       CaseHistory[]
   time_schedules      TimeSchedule[]
   departmentUsers     DepartmentUser[]
+  bedAllodments       BedAllodment[]
 
   @@map("users")
 }
@@ -304,7 +305,7 @@ model MedicinePrescription{
 model bed{
   id Int @id @default(autoincrement())
   department_id Int
-  code String
+  code String @unique
   status String
   notes String
 
@@ -312,8 +313,27 @@ model bed{
   updated_at  DateTime @updatedAt
 
   department Department @relation(fields: [department_id], references: [id])
+  bedAllodment BedAllodment[]
 
   @@map("beds")
+}
+
+model BedAllodment{
+  id Int @id @default(autoincrement())
+  patient_id Int
+  bed_id Int
+  start_date DateTime
+  end_date DateTime
+  start_time String
+  end_time String
+  status String
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  patient User @relation(fields: [patient_id], references: [id])
+  bed bed @relation(fields: [bed_id], references: [id])
+  @@map("bed_allodments")
 }
 
 model LapTemplate {
