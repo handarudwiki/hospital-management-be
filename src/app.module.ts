@@ -9,6 +9,8 @@ import { DepartmentModule } from './department/department.module';
 import { DoctorModule } from './doctor/doctor.module';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
+import { MedicineModule } from './medicine/medicine.module';
+import { MedicineCategoryModule } from './medicine_category/medicine_category.module';
 
 @Module({
   imports: [
@@ -28,6 +30,10 @@ import { join } from 'path';
     DepartmentModule,
 
     DoctorModule,
+
+    MedicineModule,
+
+    MedicineCategoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
