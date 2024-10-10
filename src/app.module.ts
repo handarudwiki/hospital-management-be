@@ -13,6 +13,7 @@ import { MedicineModule } from './medicine/medicine.module';
 import { MedicineCategoryModule } from './medicine_category/medicine_category.module';
 import { BedModule } from './bed/bed.module';
 import { BedAllodmentModule } from './bed_allodment/bed_allodment.module';
+import { LapTemplateModule } from './lap_template/lap_template.module';
 
 @Module({
   imports: [
@@ -40,6 +41,8 @@ import { BedAllodmentModule } from './bed_allodment/bed_allodment.module';
     BedModule,
 
     BedAllodmentModule,
+
+    LapTemplateModule,
   ],
   controllers: [AppController],
   providers: [AppService],
