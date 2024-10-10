@@ -14,6 +14,7 @@ import { MedicineCategoryModule } from './medicine_category/medicine_category.mo
 import { BedModule } from './bed/bed.module';
 import { BedAllodmentModule } from './bed_allodment/bed_allodment.module';
 import { LapTemplateModule } from './lap_template/lap_template.module';
+import { LapReportModule } from './lap_report/lap_report.module';
 
 @Module({
   imports: [
@@ -43,6 +44,8 @@ import { LapTemplateModule } from './lap_template/lap_template.module';
     BedAllodmentModule,
 
     LapTemplateModule,
+
+    LapReportModule,
   ],
   controllers: [AppController],
   providers: [AppService],
