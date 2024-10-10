@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -36,7 +37,7 @@ export class LapReportController {
   }
 
   @Get('/:id')
-  async getOne(@Param('id') id: number) {
+  async getOne(@Param('id', ParseIntPipe) id: number) {
     return toResponse(
       'Lap Report retrieved successfully',
       await this.lapReportService.findOne(id),
@@ -45,14 +46,17 @@ export class LapReportController {
 
   @Delete('/:id')
   @UseGuards(JwtGuard)
-  async delete(@Param('id') id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     await this.lapReportService.remove(id);
     return toResponse('Lap Report deleted successfully');
   }
 
   @Put('/:id')
   @UseGuards(JwtGuard)
-  async update(@Param('id') id: number, @Body() createDto: UdpateLapReportDto) {
+  async update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() createDto: UdpateLapReportDto,
+  ) {
     return toResponse(
       'Lap Report updated successfully',
       await this.lapReportService.update(id, createDto),

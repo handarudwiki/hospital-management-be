@@ -15,6 +15,8 @@ import { BedModule } from './bed/bed.module';
 import { BedAllodmentModule } from './bed_allodment/bed_allodment.module';
 import { LapTemplateModule } from './lap_template/lap_template.module';
 import { LapReportModule } from './lap_report/lap_report.module';
+import { AppointmentModule } from './appointment/appointment.module';
+import { TimeScheduleModule } from './time_schedule/time_schedule.module';
 
 @Module({
   imports: [
@@ -46,6 +48,10 @@ import { LapReportModule } from './lap_report/lap_report.module';
     LapTemplateModule,
 
     LapReportModule,
+
+    AppointmentModule,
+
+    TimeScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -4,6 +4,7 @@ import {
   Delete,
   Get,
   Param,
+  ParseIntPipe,
   Post,
   Put,
   UseGuards,
@@ -30,7 +31,7 @@ export class LapTemplateController {
   @Put('/:id')
   @UseGuards(JwtGuard)
   async update(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() createDto: UpdateLapTemplateDto,
   ) {
     return toResponse(
@@ -48,7 +49,7 @@ export class LapTemplateController {
   }
 
   @Get('/:id')
-  async getOne(@Param('id') id: number) {
+  async getOne(@Param('id', ParseIntPipe) id: number) {
     return toResponse(
       'Lap Template retrieved successfully',
       await this.lapTemplateService.findOne(id),
@@ -57,7 +58,7 @@ export class LapTemplateController {
 
   @Delete('/:id')
   @UseGuards(JwtGuard)
-  async delete(@Param('id') id: number) {
+  async delete(@Param('id', ParseIntPipe) id: number) {
     await this.lapTemplateService.remove(id);
     return toResponse('Lap Template deleted successfully');
   }
