@@ -22,7 +22,7 @@ model User {
   password                  String?
   address                   String?
   picture                   String?
-  birth_date                String
+  birth_date                String?
   gender                    Gender?
   phone                     String?
   mobile                    String?
