@@ -17,6 +17,7 @@ import { LapTemplateModule } from './lap_template/lap_template.module';
 import { LapReportModule } from './lap_report/lap_report.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { TimeScheduleModule } from './time_schedule/time_schedule.module';
+import { TestModule } from '../test/test.module';
 
 @Module({
   imports: [
@@ -52,6 +53,8 @@ import { TimeScheduleModule } from './time_schedule/time_schedule.module';
     AppointmentModule,
 
     TimeScheduleModule,
+
+    TestModule,
   ],
   controllers: [AppController],
   providers: [AppService],
