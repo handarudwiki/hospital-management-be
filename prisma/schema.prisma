@@ -397,7 +397,7 @@ model PaymentItem{
   name String
   type String
   price Float
-  commission String
+  commission Float
   quantity Int
 
   created_at  DateTime @default(now())
