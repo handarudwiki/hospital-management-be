@@ -55,13 +55,16 @@ export class DepartmentService {
   }
 
   async remove(id: number): Promise<string> {
-    const department = await this.prisma.department.delete({
+    const isDepartmentExist = await this.prisma.department.findUnique({
       where: { id },
     });
-
-    if (!department) {
+    // console.log(id);
+    if (!isDepartmentExist) {
       throw new NotFoundException('Department not found');
     }
+    await this.prisma.department.delete({
+      where: { id },
+    });
 
     return 'Department deleted successfully';
   }
