@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import {
   MedicinCategoryResponse,
   toMedicineCategoryResponse,
@@ -14,78 +18,98 @@ export class MedicineCategoryService {
   async create(
     data: CreateMedicineCategoryDto,
   ): Promise<MedicinCategoryResponse> {
-    const medicineCategory = await this.prisma.medicineCatgory.create({
-      data: {
-        name: data.name,
-        description: data.description,
-      },
-    });
+    try {
+      const medicineCategory = await this.prisma.medicineCatgory.create({
+        data: {
+          name: data.name,
+          description: data.description,
+        },
+      });
 
-    return toMedicineCategoryResponse(medicineCategory);
+      return toMedicineCategoryResponse(medicineCategory);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async findAll(): Promise<MedicinCategoryResponse[]> {
-    const medicineCategories = await this.prisma.medicineCatgory.findMany();
-    return medicineCategories.map((medicineCategory) =>
-      toMedicineCategoryResponse(medicineCategory),
-    );
+    try {
+      const medicineCategories = await this.prisma.medicineCatgory.findMany();
+      return medicineCategories.map((medicineCategory) =>
+        toMedicineCategoryResponse(medicineCategory),
+      );
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async findOne(id: number): Promise<MedicinCategoryResponse> {
-    const medicineCategory = await this.prisma.medicineCatgory.findUnique({
-      where: {
-        id,
-      },
-    });
+    try {
+      const medicineCategory = await this.prisma.medicineCatgory.findUnique({
+        where: {
+          id,
+        },
+      });
 
-    if (!medicineCategory) {
-      return null;
+      if (!medicineCategory) {
+        return null;
+      }
+
+      return toMedicineCategoryResponse(medicineCategory);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-
-    return toMedicineCategoryResponse(medicineCategory);
   }
 
   async update(
     id: number,
     data: UpdateMedicineCategoryDto,
   ): Promise<MedicinCategoryResponse> {
-    const isMedicineCategoryExist =
-      await this.prisma.medicineCatgory.findUnique({
+    try {
+      const isMedicineCategoryExist =
+        await this.prisma.medicineCatgory.findUnique({
+          where: {
+            id,
+          },
+        });
+      if (!isMedicineCategoryExist) {
+        throw new NotFoundException('Medicine category not found');
+      }
+      const medicineCategory = await this.prisma.medicineCatgory.update({
         where: {
           id,
         },
+        data: {
+          name: data.name,
+          description: data.description,
+        },
       });
-    if (!isMedicineCategoryExist) {
-      throw new NotFoundException('Medicine category not found');
-    }
-    const medicineCategory = await this.prisma.medicineCatgory.update({
-      where: {
-        id,
-      },
-      data: {
-        name: data.name,
-        description: data.description,
-      },
-    });
 
-    return toMedicineCategoryResponse(medicineCategory);
+      return toMedicineCategoryResponse(medicineCategory);
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async delete(id: number) {
-    const isMedicineCategoryExist =
-      await this.prisma.medicineCatgory.findUnique({
+    try {
+      const isMedicineCategoryExist =
+        await this.prisma.medicineCatgory.findUnique({
+          where: {
+            id,
+          },
+        });
+      if (!isMedicineCategoryExist) {
+        throw new NotFoundException('Medicine category not found');
+      }
+
+      await this.prisma.medicineCatgory.delete({
         where: {
           id,
         },
       });
-    if (!isMedicineCategoryExist) {
-      throw new NotFoundException('Medicine category not found');
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-
-    await this.prisma.medicineCatgory.delete({
-      where: {
-        id,
-      },
-    });
   }
 }

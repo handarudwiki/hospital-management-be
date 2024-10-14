@@ -16,33 +16,41 @@ export class PaymentItemService {
   constructor(private prisma: PrismaService) {}
 
   async validateIsDoctorExist(doctorId: number) {
-    const doctor = await this.prisma.user.findUnique({
-      where: {
-        id: doctorId,
-        role: 'doctor',
-      },
-    });
+    try {
+      const doctor = await this.prisma.user.findUnique({
+        where: {
+          id: doctorId,
+          role: 'doctor',
+        },
+      });
 
-    if (!doctor) {
-      throw new NotFoundException('Doctor not found');
+      if (!doctor) {
+        throw new NotFoundException('Doctor not found');
+      }
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
   }
 
   async validatePaymentItemExists(paymentItemId: number): Promise<any> {
-    const paymentItem = await this.prisma.paymentItem.findUnique({
-      where: {
-        id: paymentItemId,
-      },
-      include: {
-        doctor: true,
-      },
-    });
+    try {
+      const paymentItem = await this.prisma.paymentItem.findUnique({
+        where: {
+          id: paymentItemId,
+        },
+        include: {
+          doctor: true,
+        },
+      });
 
-    if (!paymentItem) {
-      throw new NotFoundException('PaymentItem not found');
+      if (!paymentItem) {
+        throw new NotFoundException('PaymentItem not found');
+      }
+
+      return paymentItem;
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-
-    return paymentItem;
   }
 
   async create(createDto: CreatePaymentItemDto): Promise<PaymentItemResponse> {

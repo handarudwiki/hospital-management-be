@@ -1,6 +1,7 @@
 import {
   ConflictException,
   Injectable,
+  InternalServerErrorException,
   UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
@@ -18,40 +19,48 @@ export class AuthService {
   ) {}
 
   async register(signUpDto: SignUpDto): Promise<RegisterResponse> {
-    const user = await this.userService.findByEmail(signUpDto.email);
-    if (user) {
-      throw new ConflictException('Email already taken');
+    try {
+      const user = await this.userService.findByEmail(signUpDto.email);
+      if (user) {
+        throw new ConflictException('Email already taken');
+      }
+      const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
+      signUpDto.password = hashedPassword;
+      const newUser = await this.userService.create(signUpDto);
+      return {
+        id: newUser.id,
+        email: newUser.email,
+        first_name: newUser.first_name,
+        last_name: newUser.last_name,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
     }
-    const hashedPassword = await bcrypt.hash(signUpDto.password, 10);
-    signUpDto.password = hashedPassword;
-    const newUser = await this.userService.create(signUpDto);
-    return {
-      id: newUser.id,
-      email: newUser.email,
-      first_name: newUser.first_name,
-      last_name: newUser.last_name,
-    };
   }
 
   async login(loginDto: SignInDto): Promise<LoginResponse> {
-    const user = await this.userService.findByEmail(loginDto.email);
-    if (!user) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-    const isPasswordValid = await bcrypt.compare(
-      loginDto.password,
-      user.password,
-    );
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+    try {
+      const user = await this.userService.findByEmail(loginDto.email);
+      if (!user) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
+      const isPasswordValid = await bcrypt.compare(
+        loginDto.password,
+        user.password,
+      );
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
 
-    const accessToken = this.jwtService.sign({ sub: user.id });
-    const refreshToken = this.generateRefreshToken(user);
-    return {
-      accessToken,
-      refreshToken,
-    };
+      const accessToken = this.jwtService.sign({ sub: user.id });
+      const refreshToken = this.generateRefreshToken(user);
+      return {
+        accessToken,
+        refreshToken,
+      };
+    } catch (error) {
+      throw new InternalServerErrorException(error);
+    }
   }
 
   async refreshToken(dto: RefreshDto): Promise<LoginResponse> {
