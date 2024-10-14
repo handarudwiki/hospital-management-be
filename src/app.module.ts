@@ -19,6 +19,7 @@ import { AppointmentModule } from './appointment/appointment.module';
 import { TimeScheduleModule } from './time_schedule/time_schedule.module';
 import { TestModule } from '../test/test.module';
 import { PaymentItemModule } from './payment_item/payment_item.module';
+import { DocumentModule } from './document/document.module';
 
 @Module({
   imports: [
@@ -58,6 +59,8 @@ import { PaymentItemModule } from './payment_item/payment_item.module';
     TestModule,
 
     PaymentItemModule,
+
+    DocumentModule,
   ],
   controllers: [AppController],
   providers: [AppService],
