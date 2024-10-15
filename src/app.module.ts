@@ -20,6 +20,7 @@ import { TimeScheduleModule } from './time_schedule/time_schedule.module';
 import { TestModule } from '../test/test.module';
 import { PaymentItemModule } from './payment_item/payment_item.module';
 import { DocumentModule } from './document/document.module';
+import { PresctiptionModule } from './presctiption/presctiption.module';
 
 @Module({
   imports: [
@@ -61,6 +62,8 @@ import { DocumentModule } from './document/document.module';
     PaymentItemModule,
 
     DocumentModule,
+
+    PresctiptionModule,
   ],
   controllers: [AppController],
   providers: [AppService],

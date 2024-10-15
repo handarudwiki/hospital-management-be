@@ -157,6 +157,20 @@ model Document {
   @@map("documents")
 }
 
+model MedicinePrescription{
+  id          Int      @id @default(autoincrement())
+  prescription_id Int 
+  medicine_id Int
+  instructions String
+
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  prescription Prescription @relation(fields: [prescription_id], references: [id])
+  medicine Medicine @relation(fields: [medicine_id], references: [id])
+  @@map("medicine_prescriptions")
+}
+
 model Prescription {
   id             Int      @id @default(autoincrement())
   doctor_id      Int
@@ -286,20 +300,6 @@ model ServiceServicePackage{
   servicePackage ServicePackage @relation(fields: [service_package_id], references: [id])
 
   @@map("service_service_packages")
-}
-
-model MedicinePrescription{
-  id          Int      @id @default(autoincrement())
-  prescription_id Int 
-  medicine_id Int
-  instructions String
-
-  created_at  DateTime @default(now())
-  updated_at  DateTime @updatedAt
-
-  prescription Prescription @relation(fields: [prescription_id], references: [id])
-  medicine Medicine @relation(fields: [medicine_id], references: [id])
-  @@map("medicine_prescriptions")
 }
 
 model bed{
