@@ -21,6 +21,7 @@ import { TestModule } from '../test/test.module';
 import { PaymentItemModule } from './payment_item/payment_item.module';
 import { DocumentModule } from './document/document.module';
 import { PresctiptionModule } from './presctiption/presctiption.module';
+import { DayOfScheduleModule } from './day_of_schedule/day_of_schedule.module';
 
 @Module({
   imports: [
@@ -64,6 +65,8 @@ import { PresctiptionModule } from './presctiption/presctiption.module';
     DocumentModule,
 
     PresctiptionModule,
+
+    DayOfScheduleModule,
   ],
   controllers: [AppController],
   providers: [AppService],
