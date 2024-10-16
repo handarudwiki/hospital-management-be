@@ -22,6 +22,7 @@ import { PaymentItemModule } from './payment_item/payment_item.module';
 import { DocumentModule } from './document/document.module';
 import { PresctiptionModule } from './presctiption/presctiption.module';
 import { DayOfScheduleModule } from './day_of_schedule/day_of_schedule.module';
+import { CaseHistoryModule } from './case_history/case_history.module';
 
 @Module({
   imports: [
@@ -67,6 +68,8 @@ import { DayOfScheduleModule } from './day_of_schedule/day_of_schedule.module';
     PresctiptionModule,
 
     DayOfScheduleModule,
+
+    CaseHistoryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
