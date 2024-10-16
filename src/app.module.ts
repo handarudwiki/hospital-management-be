@@ -23,6 +23,8 @@ import { DocumentModule } from './document/document.module';
 import { PresctiptionModule } from './presctiption/presctiption.module';
 import { DayOfScheduleModule } from './day_of_schedule/day_of_schedule.module';
 import { CaseHistoryModule } from './case_history/case_history.module';
+import { ServiceModule } from './service/service.module';
+import { ServicePackageModule } from './service_package/service_package.module';
 
 @Module({
   imports: [
@@ -70,6 +72,10 @@ import { CaseHistoryModule } from './case_history/case_history.module';
     DayOfScheduleModule,
 
     CaseHistoryModule,
+
+    ServiceModule,
+
+    ServicePackageModule,
   ],
   controllers: [AppController],
   providers: [AppService],
